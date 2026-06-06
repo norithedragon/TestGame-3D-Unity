@@ -8,25 +8,25 @@ public class GameManager : MonoBehaviour
 
     [Header("UI")]
     [SerializeField] private TMP_Text energyCellText;
+    [SerializeField] private TMP_Text objectiveText;
+
+    [Header("Exit")]
+    [SerializeField] private ExitDoor exitDoor;
 
     private int collectedEnergyCells;
 
     private void Start()
     {
+        collectedEnergyCells = 0;
+
         UpdateEnergyCellUI();
+        UpdateObjectiveText("Collect all Energy Cells!");
     }
 
     public void CollectEnergyCell()
     {
         collectedEnergyCells++;
         UpdateEnergyCellUI();
-
-        Debug.Log(
-            "Energetické články: " +
-            collectedEnergyCells +
-            " / " +
-            requiredEnergyCells
-        );
 
         if (collectedEnergyCells >= requiredEnergyCells)
         {
@@ -42,14 +42,26 @@ public class GameManager : MonoBehaviour
         }
 
         energyCellText.text =
-            "Energy Cells: " +
-            collectedEnergyCells +
-            " / " +
-            requiredEnergyCells;
+            $"Energy Cells: {collectedEnergyCells} / {requiredEnergyCells}";
+    }
+
+    private void UpdateObjectiveText(string newObjective)
+    {
+        if (objectiveText == null)
+        {
+            return;
+        }
+
+        objectiveText.text = newObjective;
     }
 
     private void AllEnergyCellsCollected()
     {
-        Debug.Log("Všechny energetické články byly sebrány!");
+        UpdateObjectiveText("Reach the escape zone!");
+
+        if (exitDoor != null)
+        {
+            exitDoor.OpenDoor();
+        }
     }
 }
