@@ -17,7 +17,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float groundCheckRadius = 0.25f;
     [SerializeField] private LayerMask groundLayer;
 
+    [Header("Camera")]
+    [SerializeField] private Transform cameraTransform;
+
     private CharacterController characterController;
+
     private Vector2 movementInput;
     private float verticalVelocity;
     private bool isGrounded;
@@ -27,10 +31,17 @@ public class PlayerMovement : MonoBehaviour
         characterController = GetComponent<CharacterController>();
     }
 
+    private void Start()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
     private void Update()
     {
         CheckGround();
         HandleGravity();
+        RotatePlayerWithCamera();
         MovePlayer();
     }
 
@@ -69,27 +80,53 @@ public class PlayerMovement : MonoBehaviour
         verticalVelocity += gravity * Time.deltaTime;
     }
 
+    private void RotatePlayerWithCamera()
+    {
+        if (cameraTransform == null)
+        {
+            return;
+        }
+
+        Vector3 facingDirection = cameraTransform.forward;
+        facingDirection.y = 0f;
+        facingDirection.Normalize();
+
+        if (facingDirection.sqrMagnitude < 0.01f)
+        {
+            return;
+        }
+
+        Quaternion targetRotation =
+            Quaternion.LookRotation(facingDirection);
+
+        transform.rotation = Quaternion.Slerp(
+            transform.rotation,
+            targetRotation,
+            rotationSpeed * Time.deltaTime
+        );
+    }
+
     private void MovePlayer()
     {
-        Vector3 movement = new Vector3(
-            movementInput.x,
-            0f,
-            movementInput.y
-        );
+        if (cameraTransform == null)
+        {
+            return;
+        }
+
+        Vector3 cameraForward = cameraTransform.forward;
+        Vector3 cameraRight = cameraTransform.right;
+
+        cameraForward.y = 0f;
+        cameraRight.y = 0f;
+
+        cameraForward.Normalize();
+        cameraRight.Normalize();
+
+        Vector3 movement =
+            cameraForward * movementInput.y +
+            cameraRight * movementInput.x;
 
         movement = Vector3.ClampMagnitude(movement, 1f);
-
-        if (movement.sqrMagnitude > 0.01f)
-        {
-            Quaternion targetRotation =
-                Quaternion.LookRotation(movement);
-
-            transform.rotation = Quaternion.Slerp(
-                transform.rotation,
-                targetRotation,
-                rotationSpeed * Time.deltaTime
-            );
-        }
 
         Vector3 finalMovement =
             movement * movementSpeed;
