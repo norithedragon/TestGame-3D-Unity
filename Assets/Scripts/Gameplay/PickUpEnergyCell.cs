@@ -8,10 +8,12 @@ public class EnergyCellPickup : MonoBehaviour
     [SerializeField] private float hoverSpeed = 2f;
 
     private Vector3 startPosition;
+    private GameManager gameManager;
 
     private void Start()
     {
         startPosition = transform.position;
+        gameManager = FindFirstObjectByType<GameManager>();
     }
 
     private void Update()
@@ -43,6 +45,17 @@ public class EnergyCellPickup : MonoBehaviour
         if (!other.CompareTag("Player"))
         {
             return;
+        }
+
+        if (gameManager != null)
+        {
+            gameManager.CollectEnergyCell();
+        }
+        else
+        {
+            Debug.LogWarning(
+                "GameManager nebyl ve scéně nalezen."
+            );
         }
 
         Destroy(gameObject);
