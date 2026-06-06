@@ -9,7 +9,9 @@ public class GameManager : MonoBehaviour
     [Header("UI")]
     [SerializeField] private TMP_Text energyCellText;
     [SerializeField] private TMP_Text objectiveText;
+    [SerializeField] private TMP_Text healthText;
     [SerializeField] private GameObject winPanel;
+    [SerializeField] private GameObject losePanel;
 
     [Header("Exit")]
     [SerializeField] private ExitDoor exitDoor;
@@ -33,6 +35,11 @@ public class GameManager : MonoBehaviour
         {
             winPanel.SetActive(false);
         }
+
+        if (losePanel != null)
+        {
+            losePanel.SetActive(false);
+        }
     }
 
     public void CollectEnergyCell()
@@ -49,6 +56,16 @@ public class GameManager : MonoBehaviour
         {
             AllEnergyCellsCollected();
         }
+    }
+
+    public void UpdateHealthUI(int currentHealth, int maxHealth)
+    {
+        if (healthText == null)
+        {
+            return;
+        }
+
+        healthText.text = $"Health: {currentHealth} / {maxHealth}";
     }
 
     private void UpdateEnergyCellUI()
@@ -98,6 +115,28 @@ public class GameManager : MonoBehaviour
             winPanel.SetActive(true);
         }
 
+        EndGame();
+    }
+
+    public void LoseGame()
+    {
+        if (gameFinished)
+        {
+            return;
+        }
+
+        gameFinished = true;
+
+        if (losePanel != null)
+        {
+            losePanel.SetActive(true);
+        }
+
+        EndGame();
+    }
+
+    private void EndGame()
+    {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
