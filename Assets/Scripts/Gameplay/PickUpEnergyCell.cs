@@ -7,6 +7,11 @@ public class EnergyCellPickup : MonoBehaviour
     [SerializeField] private float hoverHeight = 0.2f;
     [SerializeField] private float hoverSpeed = 2f;
 
+    [Header("Effects")]
+    [SerializeField] private ParticleSystem pickupEffect;
+    [SerializeField] private AudioClip pickupSound;
+    
+
     private Vector3 startPosition;
     private GameManager gameManager;
 
@@ -18,21 +23,12 @@ public class EnergyCellPickup : MonoBehaviour
 
     private void Update()
     {
-        RotatePickup();
-        HoverPickup();
-    }
-
-    private void RotatePickup()
-    {
         transform.Rotate(
             Vector3.up,
             rotationSpeed * Time.deltaTime,
             Space.World
         );
-    }
 
-    private void HoverPickup()
-    {
         float verticalOffset =
             Mathf.Sin(Time.time * hoverSpeed) * hoverHeight;
 
@@ -51,10 +47,21 @@ public class EnergyCellPickup : MonoBehaviour
         {
             gameManager.CollectEnergyCell();
         }
-        else
+
+        if (pickupEffect != null)
         {
-            Debug.LogWarning(
-                "GameManager nebyl ve scéně nalezen."
+            Instantiate(
+                pickupEffect,
+                transform.position,
+                Quaternion.identity
+            );
+        }
+
+        if (pickupSound != null)
+        {
+            AudioSource.PlayClipAtPoint(
+                pickupSound,
+                transform.position
             );
         }
 

@@ -23,20 +23,40 @@ public class PlayerMovement : MonoBehaviour
     [Header("Animation")]
     [SerializeField] private Animator animator;
 
+    [Header("Audio")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip footstepSoundA;
+    [SerializeField] private AudioClip footstepSoundB;
+    [SerializeField] private AudioClip jumpSound;
+    [SerializeField, Range(0f, 2f)] private float footstepVolume = 1f;
+    [SerializeField, Range(0f, 2f)] private float jumpVolume = 1f;
+    [SerializeField] private float footstepInterval = 0.45f;
+
     private CharacterController characterController;
     private Vector2 movementInput;
+
     private float verticalVelocity;
+    private float footstepTimer;
+
+    private int footstepIndex;
     private bool isGrounded;
 
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
+
+        if (audioSource == null)
+        {
+            audioSource = GetComponent<AudioSource>();
+        }
     }
 
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        footstepIndex = 0;
     }
 
     private void Update()
@@ -46,6 +66,7 @@ public class PlayerMovement : MonoBehaviour
         RotatePlayerWithCamera();
         MovePlayer();
         UpdateAnimations();
+        HandleFootsteps();
     }
 
     public void OnMove(InputValue value)
@@ -55,12 +76,16 @@ public class PlayerMovement : MonoBehaviour
 
     public void OnJump(InputValue value)
     {
-        if (value.isPressed && isGrounded)
+        if (!value.isPressed || !isGrounded)
         {
-            verticalVelocity = Mathf.Sqrt(
-                jumpHeight * -2f * gravity
-            );
+            return;
         }
+
+        verticalVelocity = Mathf.Sqrt(
+            jumpHeight * -2f * gravity
+        );
+
+        PlayJumpSound();
     }
 
     private void CheckGround()
@@ -163,6 +188,70 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool(
             "IsGrounded",
             isGrounded
+        );
+    }
+
+    private void HandleFootsteps()
+    {
+        bool isMoving =
+            movementInput.sqrMagnitude > 0.01f;
+
+        if (!isGrounded || !isMoving)
+        {
+            footstepTimer = 0f;
+            return;
+        }
+
+        footstepTimer -= Time.deltaTime;
+
+        if (footstepTimer <= 0f)
+        {
+            PlayFootstepSound();
+            footstepTimer = footstepInterval;
+        }
+    }
+
+    private void PlayFootstepSound()
+    {
+        if (audioSource == null)
+        {
+            return;
+        }
+
+        AudioClip selectedSound;
+
+        if (footstepIndex == 0)
+        {
+            selectedSound = footstepSoundA;
+            footstepIndex = 1;
+        }
+        else
+        {
+            selectedSound = footstepSoundB;
+            footstepIndex = 0;
+        }
+
+        if (selectedSound == null)
+        {
+            return;
+        }
+
+        audioSource.PlayOneShot(
+            selectedSound,
+            footstepVolume
+        );
+    }
+
+    private void PlayJumpSound()
+    {
+        if (audioSource == null || jumpSound == null)
+        {
+            return;
+        }
+
+        audioSource.PlayOneShot(
+            jumpSound,
+            jumpVolume
         );
     }
 
