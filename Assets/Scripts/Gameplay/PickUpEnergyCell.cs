@@ -2,18 +2,21 @@ using UnityEngine;
 
 public class EnergyCellPickup : MonoBehaviour
 {
-    [Header("Visuals")]
+    [Header("Movement")]
     [SerializeField] private float rotationSpeed = 90f;
     [SerializeField] private float hoverHeight = 0.2f;
     [SerializeField] private float hoverSpeed = 2f;
 
     [Header("Effects")]
     [SerializeField] private ParticleSystem pickupEffect;
+
+    [Header("Audio")]
     [SerializeField] private AudioClip pickupSound;
-    
+    [SerializeField, Range(0f, 2f)] private float pickupVolume = 1f;
 
     private Vector3 startPosition;
     private GameManager gameManager;
+    private bool wasCollected;
 
     private void Start()
     {
@@ -38,15 +41,27 @@ public class EnergyCellPickup : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag("Player"))
+        if (wasCollected)
         {
             return;
         }
+
+        PlayerEnergyGlow energyGlow =
+            other.GetComponentInParent<PlayerEnergyGlow>();
+
+        if (energyGlow == null)
+        {
+            return;
+        }
+
+        wasCollected = true;
 
         if (gameManager != null)
         {
             gameManager.CollectEnergyCell();
         }
+
+        energyGlow.PlayEnergyGlow();
 
         if (pickupEffect != null)
         {
@@ -61,7 +76,8 @@ public class EnergyCellPickup : MonoBehaviour
         {
             AudioSource.PlayClipAtPoint(
                 pickupSound,
-                transform.position
+                transform.position,
+                pickupVolume
             );
         }
 

@@ -9,6 +9,11 @@ public class PlayerHealth : MonoBehaviour
     [Header("Damage Protection")]
     [SerializeField] private float invulnerabilityDuration = 1f;
 
+    [Header("Damage Flash")]
+    [SerializeField] private Renderer[] playerRenderers;
+    [SerializeField] private int flashCount = 4;
+    [SerializeField] private float flashInterval = 0.1f;
+
     [Header("Audio")]
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip damageSound;
@@ -63,7 +68,59 @@ public class PlayerHealth : MonoBehaviour
             return;
         }
 
-        StartCoroutine(InvulnerabilityRoutine());
+        StartCoroutine(DamageFeedbackRoutine());
+    }
+
+    private IEnumerator DamageFeedbackRoutine()
+    {
+        isInvulnerable = true;
+
+        for (int i = 0; i < flashCount; i++)
+        {
+            SetRenderersVisible(false);
+
+            yield return new WaitForSeconds(
+                flashInterval
+            );
+
+            SetRenderersVisible(true);
+
+            yield return new WaitForSeconds(
+                flashInterval
+            );
+        }
+
+        float flashDuration =
+            flashCount * flashInterval * 2f;
+
+        float remainingInvulnerability =
+            invulnerabilityDuration - flashDuration;
+
+        if (remainingInvulnerability > 0f)
+        {
+            yield return new WaitForSeconds(
+                remainingInvulnerability
+            );
+        }
+
+        SetRenderersVisible(true);
+        isInvulnerable = false;
+    }
+
+    private void SetRenderersVisible(bool visible)
+    {
+        if (playerRenderers == null)
+        {
+            return;
+        }
+
+        foreach (Renderer playerRenderer in playerRenderers)
+        {
+            if (playerRenderer != null)
+            {
+                playerRenderer.enabled = visible;
+            }
+        }
     }
 
     private void PlayDamageSound()
@@ -79,19 +136,10 @@ public class PlayerHealth : MonoBehaviour
         );
     }
 
-    private IEnumerator InvulnerabilityRoutine()
-    {
-        isInvulnerable = true;
-
-        yield return new WaitForSeconds(
-            invulnerabilityDuration
-        );
-
-        isInvulnerable = false;
-    }
-
     private void Die()
     {
+        SetRenderersVisible(true);
+
         if (gameManager != null)
         {
             gameManager.LoseGame();
