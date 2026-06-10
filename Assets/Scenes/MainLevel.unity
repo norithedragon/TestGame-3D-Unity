@@ -1487,6 +1487,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   cameraTransform: {fileID: 330585546}
+  animator: {fileID: 784502953}
 --- !u!143 &754298558
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1519,7 +1520,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 754298556}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -1582,6 +1583,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 784502952}
   - {fileID: 806231076}
   - {fileID: 676255138}
   m_Father: {fileID: 0}
@@ -1629,6 +1631,38 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
   maxHealth: 3
+--- !u!1 &784502951 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: df8e86716d586a24a8a3cb4e76d5b900, type: 3}
+  m_PrefabInstance: {fileID: 1679758327}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &784502952 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: df8e86716d586a24a8a3cb4e76d5b900, type: 3}
+  m_PrefabInstance: {fileID: 1679758327}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &784502953
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 784502951}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 9e0e10bd74eda874d88822d4257aa90d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &785810296
 GameObject:
   m_ObjectHideFlags: 0
@@ -3753,6 +3787,66 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EscapeZone
   gameManager: {fileID: 2077964129}
+--- !u!1001 &1679758327
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 754298562}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: df8e86716d586a24a8a3cb4e76d5b900, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: df8e86716d586a24a8a3cb4e76d5b900, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.974
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: df8e86716d586a24a8a3cb4e76d5b900, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: df8e86716d586a24a8a3cb4e76d5b900, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: df8e86716d586a24a8a3cb4e76d5b900, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: df8e86716d586a24a8a3cb4e76d5b900, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: df8e86716d586a24a8a3cb4e76d5b900, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: df8e86716d586a24a8a3cb4e76d5b900, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: df8e86716d586a24a8a3cb4e76d5b900, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: df8e86716d586a24a8a3cb4e76d5b900, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: df8e86716d586a24a8a3cb4e76d5b900, type: 3}
+      propertyPath: m_Name
+      value: ModularRobots
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: df8e86716d586a24a8a3cb4e76d5b900, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 784502953}
+  m_SourcePrefab: {fileID: 100100000, guid: df8e86716d586a24a8a3cb4e76d5b900, type: 3}
 --- !u!1 &1712920395
 GameObject:
   m_ObjectHideFlags: 0

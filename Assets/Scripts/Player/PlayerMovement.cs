@@ -20,8 +20,10 @@ public class PlayerMovement : MonoBehaviour
     [Header("Camera")]
     [SerializeField] private Transform cameraTransform;
 
-    private CharacterController characterController;
+    [Header("Animation")]
+    [SerializeField] private Animator animator;
 
+    private CharacterController characterController;
     private Vector2 movementInput;
     private float verticalVelocity;
     private bool isGrounded;
@@ -43,6 +45,7 @@ public class PlayerMovement : MonoBehaviour
         HandleGravity();
         RotatePlayerWithCamera();
         MovePlayer();
+        UpdateAnimations();
     }
 
     public void OnMove(InputValue value)
@@ -62,6 +65,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void CheckGround()
     {
+        if (groundCheck == null)
+        {
+            isGrounded = false;
+            return;
+        }
+
         isGrounded = Physics.CheckSphere(
             groundCheck.position,
             groundCheckRadius,
@@ -89,12 +98,13 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 facingDirection = cameraTransform.forward;
         facingDirection.y = 0f;
-        facingDirection.Normalize();
 
         if (facingDirection.sqrMagnitude < 0.01f)
         {
             return;
         }
+
+        facingDirection.Normalize();
 
         Quaternion targetRotation =
             Quaternion.LookRotation(facingDirection);
@@ -135,6 +145,24 @@ public class PlayerMovement : MonoBehaviour
 
         characterController.Move(
             finalMovement * Time.deltaTime
+        );
+    }
+
+    private void UpdateAnimations()
+    {
+        if (animator == null)
+        {
+            return;
+        }
+
+        animator.SetFloat(
+            "Speed",
+            movementInput.magnitude
+        );
+
+        animator.SetBool(
+            "IsGrounded",
+            isGrounded
         );
     }
 
