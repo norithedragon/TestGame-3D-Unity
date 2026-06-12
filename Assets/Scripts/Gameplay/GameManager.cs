@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int requiredEnergyCells = 3;
 
     [Header("UI")]
+    [SerializeField] private GameObject gameplayHUD;
     [SerializeField] private TMP_Text energyCellText;
     [SerializeField] private TMP_Text objectiveText;
     [SerializeField] private TMP_Text healthText;
@@ -29,8 +30,10 @@ public class GameManager : MonoBehaviour
         allEnergyCellsCollected = false;
         gameFinished = false;
 
-        UpdateEnergyCellUI();
-        UpdateObjectiveText("Collect all Energy Cells");
+        if (gameplayHUD != null)
+        {
+            gameplayHUD.SetActive(true);
+        }
 
         if (winPanel != null)
         {
@@ -41,6 +44,9 @@ public class GameManager : MonoBehaviour
         {
             losePanel.SetActive(false);
         }
+
+        UpdateEnergyCellUI();
+        UpdateObjectiveText("Collect all Energy Cells");
     }
 
     public void CollectEnergyCell()
@@ -59,6 +65,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
+
+public void ReturnToMainMenu()
+{
+    Time.timeScale = 1f;
+    SceneManager.LoadScene("MainMenu");
+}
     public void UpdateHealthUI(int currentHealth, int maxHealth)
     {
         if (healthText == null)
@@ -66,7 +79,8 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        healthText.text = $"Health: {currentHealth} / {maxHealth}";
+        healthText.text =
+            $"Health: {currentHealth} / {maxHealth}";
     }
 
     private void UpdateEnergyCellUI()
@@ -111,6 +125,11 @@ public class GameManager : MonoBehaviour
 
         gameFinished = true;
 
+        if (gameplayHUD != null)
+        {
+            gameplayHUD.SetActive(false);
+        }
+
         if (winPanel != null)
         {
             winPanel.SetActive(true);
@@ -127,6 +146,11 @@ public class GameManager : MonoBehaviour
         }
 
         gameFinished = true;
+
+        if (gameplayHUD != null)
+        {
+            gameplayHUD.SetActive(false);
+        }
 
         if (losePanel != null)
         {
